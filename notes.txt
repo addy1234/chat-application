@@ -1,0 +1,1 @@
+1) index.js will automatically pick index.html file, if present in public directory, and is placed above the '/' route.
