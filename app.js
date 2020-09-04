@@ -3,6 +3,8 @@ const socket = require("socket.io");
 const mysql = require('mysql');
 const passport = require('passport');
 const bodyParser = require('body-parser');
+const session = require('express-session');
+
 
 var con = mysql.createConnection({
   host: "localhost",
@@ -33,6 +35,7 @@ con.connect(function(err) {
 const PORT = 8080;
 const app = express();
 
+app.use(session({secret: 'ssshhhhh'}));
 // Mongoose setup
 
 // DB setup
@@ -65,10 +68,16 @@ io.on("connection", function (socket) {
 });
 
 app.get('/', function(req, res){
+  console.log("*******");
+  console.log(req.sessionID);
   res.render('index.ejs');
 });
 
 app.get('/login', function(req, res) {
+  console.log(req.sessionID);
+  //console.log(req);
+  //console.log("*********");
+  //console.log(res);
   res.render('login');
 });
 
@@ -82,7 +91,8 @@ app.post('/login', function(req, res) {
   let userEmail = userData.email;
   let userPassword = userData.password;
 
-  sqlQuery = `select * from users where email='${userEmail}' and password='${userPassword}}'`;
+  sqlQuery = `select * from users where email='${userEmail}' and password='${userPassword}'`;
+  console.log(sqlQuery);
   con.query(sqlQuery, function(err, data) {
     if (err) {
       console.log(err); 
@@ -91,6 +101,14 @@ app.post('/login', function(req, res) {
           console.log('No user found');
           res.redirect('/signup');
         } else {
+          // Successful logged in.
+          sqlQueryGetId = `select id from users where email='${userEmail}'`;
+          con.query(sqlQueryGetId, function(err, data) {
+            console.log(data);
+            console.log(data[0].id);
+            req.session._id = data[0].id;
+            console.log(req.session._id);
+          });
           res.redirect('/');
         }
     }
@@ -98,6 +116,7 @@ app.post('/login', function(req, res) {
 });
 
 app.post('/signup', function(req, res) {
+  console.log(req.session);
   let userData =  req.body;
   console.log(userData);
   let userEmail = userData.email;
