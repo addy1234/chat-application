@@ -1,9 +1,9 @@
-const express = require("express");
-const socket = require("socket.io");
-const mysql = require('mysql');
-const passport = require('passport');
-const bodyParser = require('body-parser');
-const session = require('express-session');
+var express = require("express");
+var socket = require("socket.io");
+var mysql = require('mysql');
+var passport = require('passport');
+var bodyParser = require('body-parser');
+var session = require('express-session');
 
 
 var con = mysql.createConnection({
@@ -31,15 +31,17 @@ con.connect(function(err) {
 // Different types of sessions.
 
 
+// Learn about SQ
 // App setup
-const PORT = 8080;
-const app = express();
+var PORT = 8080;
+var app = express();
 
-app.use(session({secret: 'ssshhhhh'}));
+app.use(session({secret: 'ssshhhhh', saveUninitialized: true, resave: true}));
 // Mongoose setup
 
 // DB setup
 
+// Learn about cookies and sessions. 
 
 // Use passport.js
 
@@ -51,13 +53,13 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const server = app.listen(PORT, function () {
+var server = app.listen(PORT, function () {
   console.log(`Listening on port ${PORT}`);
   console.log(`http://localhost:${PORT}`);
 });
 
 // Socket setup
-const io = socket(server);
+var io = socket(server);
 
 io.on("connection", function (socket) {
     console.log("Made socket connection");
@@ -69,15 +71,13 @@ io.on("connection", function (socket) {
 
 app.get('/', function(req, res){
   console.log("*******");
-  console.log(req.sessionID);
-  res.render('index.ejs');
+  console.log(session);
+  console.log(req.session._id);
+  res.render('index.ejs', {userId: req.session._id});
 });
 
 app.get('/login', function(req, res) {
-  console.log(req.sessionID);
-  //console.log(req);
-  //console.log("*********");
-  //console.log(res);
+  console.log(req.session.id);
   res.render('login');
 });
 
@@ -90,10 +90,11 @@ app.post('/login', function(req, res) {
   console.log(userData);
   let userEmail = userData.email;
   let userPassword = userData.password;
-
+  
   sqlQuery = `select * from users where email='${userEmail}' and password='${userPassword}'`;
   console.log(sqlQuery);
   con.query(sqlQuery, function(err, data) {
+
     if (err) {
       console.log(err); 
     } else {
@@ -105,14 +106,24 @@ app.post('/login', function(req, res) {
           sqlQueryGetId = `select id from users where email='${userEmail}'`;
           con.query(sqlQueryGetId, function(err, data) {
             console.log(data);
-            console.log(data[0].id);
             req.session._id = data[0].id;
-            console.log(req.session._id);
+            res.redirect('/');
           });
-          res.redirect('/');
+          // It will get executed first because of asynchronous behaviour of JS.
+          console.log("In here: " + req.session._id);
         }
     }
   });
+});
+
+app.get('/logout', function(req, res) {
+  if (req.session._id) {
+    req.session.destroy(function(){
+      res.redirect('/');
+    });
+  } else {
+    res.redirect('/login');
+  }
 });
 
 app.post('/signup', function(req, res) {
