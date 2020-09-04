@@ -37,6 +37,12 @@ var PORT = 8080;
 var app = express();
 
 app.use(session({secret: 'ssshhhhh', saveUninitialized: true, resave: true}));
+
+app.use((req, res, next)=>{     
+  res.locals.currentUser = req.session._id;
+  next();
+});
+
 // Mongoose setup
 
 // DB setup
@@ -63,9 +69,11 @@ var io = socket(server);
 
 io.on("connection", function (socket) {
     console.log("Made socket connection");
-    socket.on('message', function(data){
-      console.log(data);
-      socket.broadcast.emit("res", data);
+    socket.on('message', function(messageData){
+      console.log(messageData);
+      // socket means it will not go to sender.
+      // io means it will go to sender as well.
+      socket.broadcast.emit("messageResponse", messageData);
     });
 });
 
@@ -79,6 +87,10 @@ app.get('/', function(req, res){
 app.get('/login', function(req, res) {
   console.log(req.session.id);
   res.render('login');
+});
+
+app.get('/chat', function(req, res) {
+  res.render('chat', {userId: req.session._id});
 });
 
 app.get('/signup', function(req, res) {
