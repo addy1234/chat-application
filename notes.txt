@@ -1,1 +1,11 @@
 1) index.js will automatically pick index.html file, if present in public directory, and is placed above the '/' route.
+
+    <div>
+        <% allMessages.forEach(function(message) { %>
+            <li><%= message.sender_id %>, <%= message.receiver_id %> , <%= message.mssg %> , <%= message.created_at %></li>
+        <% }); %>
+    </div>
+
+        <p id="currentUser">
+        <%= currentUser %>
+    </p>

@@ -7,10 +7,10 @@ var userId       = document.getElementById('currentUser');
 function send() {
     console.log("Inside");
     console.log(messageToSend.value);
-    socket.emit("message", {msg: messageToSend.value, receiver: mssgReceiver.value, sender: userId.innerText});
+    socket.emit("message", {mssg: messageToSend.value, receiver: mssgReceiver.value, sender: userId.innerText});
     // Add message html to chat.ejs.
-    message = `<li>${userId.innerText} to ${mssgReceiver.value}: ${messageToSend.value}</li>`
-    chatDisplay.innerHTML += message;
+    // message = `<li>${userId.innerText} to ${mssgReceiver.value}: ${messageToSend.value}</li>`
+    // chatDisplay.innerHTML += message;
     messageToSend.value = "";
     mssgReceiver.value  = "";
 }
@@ -19,9 +19,9 @@ socket.on("messageResponse", function(messageData){
     console.log("Hey, I am here");
     console.log(messageData.receiver);
     console.log(userId.textContent);
-    if (messageData.receiver == userId.textContent.trim()) {
+    if (messageData.receiver == userId.textContent.trim() || messageData.sender == userId.textContent.trim()) {
         console.log("Inside this too");
-        message = `<li>${messageData.sender} to ${messageData.receiver}: ${messageData.msg}</li>`
+        message = `<li>${messageData.sender} to ${messageData.receiver}: ${messageData.mssg}</li>`
         chatDisplay.innerHTML += message;
     }
 });

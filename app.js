@@ -70,17 +70,27 @@ var io = socket(server);
 io.on("connection", function (socket) {
     console.log("Made socket connection");
     socket.on('message', function(messageData){
+      console.log("##########");
       console.log(messageData);
       // socket means it will not go to sender.
       // io means it will go to sender as well.
-      socket.broadcast.emit("messageResponse", messageData);
+
+      // Add entry into the message table.
+      // Handle SQL injection
+      sqlQueryMessage = "insert into message (sender_id, receiver_id, mssg) values(?, ?, ?)";
+      // delete from message.
+      con.query(sqlQueryMessage, 
+                [messageData.sender, messageData.receiver, messageData.mssg], function(err, result) {
+                  console.log("Entry added");
+                });
+      io.emit("messageResponse", messageData);
     });
 });
 
 app.get('/', function(req, res){
-  console.log("*******");
-  console.log(session);
-  console.log(req.session._id);
+  // console.log("*******");
+  // console.log(session);
+  // console.log(req.session._id);
   res.render('index.ejs', {userId: req.session._id});
 });
 
@@ -89,8 +99,18 @@ app.get('/login', function(req, res) {
   res.render('login');
 });
 
-app.get('/chat', function(req, res) {
-  res.render('chat', {userId: req.session._id});
+app.get('/chat/ab', function(req, res) {
+  // Get all the chats related to the current user.
+  // var receiver_id = req.params.id;
+  console.log(receiver_id);
+  var receiver_id = 2;
+  sqlQueryGetAllMessages = "select * from message where (sender_id = ? and receiver_id = ?) or (sender_id = ? and receiver_id = ?) order by created_at";
+  con.query(sqlQueryGetAllMessages, [req.session._id, receiver_id, receiver_id, req.session._id], function(err, allMessages) {
+    console.log(allMessages);
+    console.log("Inside chat id function");
+    // res.render('chat', {allMessages: allMessages});
+    res.render('chat');
+  });
 });
 
 app.get('/signup', function(req, res) {
@@ -99,12 +119,12 @@ app.get('/signup', function(req, res) {
 
 app.post('/login', function(req, res) {
   let userData =  req.body;
-  console.log(userData);
+  // console.log(userData);
   let userEmail = userData.email;
   let userPassword = userData.password;
   
   sqlQuery = `select * from users where email='${userEmail}' and password='${userPassword}'`;
-  console.log(sqlQuery);
+  // console.log(sqlQuery);
   con.query(sqlQuery, function(err, data) {
 
     if (err) {
@@ -117,7 +137,7 @@ app.post('/login', function(req, res) {
           // Successful logged in.
           sqlQueryGetId = `select id from users where email='${userEmail}'`;
           con.query(sqlQueryGetId, function(err, data) {
-            console.log(data);
+            // console.log(data);
             req.session._id = data[0].id;
             res.redirect('/');
           });
@@ -139,9 +159,9 @@ app.get('/logout', function(req, res) {
 });
 
 app.post('/signup', function(req, res) {
-  console.log(req.session);
+  // console.log(req.session);
   let userData =  req.body;
-  console.log(userData);
+  // console.log(userData);
   let userEmail = userData.email;
   let userPassword = userData.password;
 
