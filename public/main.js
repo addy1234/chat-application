@@ -7,7 +7,7 @@ var userId       = document.getElementById('currentUser');
 function send() {
     console.log("Inside");
     console.log(messageToSend.value);
-    socket.emit("message", {mssg: messageToSend.value, receiver: mssgReceiver.value, sender: userId.innerText});
+    socket.emit("message", {mssg: messageToSend.value, receiver: mssgReceiver.innerText, sender: userId.innerText});
     // Add message html to chat.ejs.
     // message = `<li>${userId.innerText} to ${mssgReceiver.value}: ${messageToSend.value}</li>`
     // chatDisplay.innerHTML += message;

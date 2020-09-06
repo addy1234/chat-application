@@ -108,7 +108,16 @@ app.get('/chat/:id', function(req, res) {
     console.log(allMessages);
     console.log("Inside chat id function");
     // res.render('chat', {allMessages: allMessages});
-    res.render('chat', {allMessages: allMessages});
+    res.render('chat', {allMessages: allMessages, receiver_id: receiver_id});
+  });
+});
+
+app.get('/users', function(req, res) {
+  // Get all users id and name here.
+  var curUser = req.session._id;
+  sqlQueryGetAllUsers = "select id, email from users where id != ?";
+  con.query(sqlQueryGetAllUsers, [curUser], function(err, users) {
+    res.render('users', {users: users});
   });
 });
 
