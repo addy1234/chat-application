@@ -99,17 +99,16 @@ app.get('/login', function(req, res) {
   res.render('login');
 });
 
-app.get('/chat/ab', function(req, res) {
+app.get('/chat/:id', function(req, res) {
   // Get all the chats related to the current user.
-  // var receiver_id = req.params.id;
-  console.log(receiver_id);
-  var receiver_id = 2;
+  var receiver_id = req.params.id;
+  // console.log(receiver_id);
   sqlQueryGetAllMessages = "select * from message where (sender_id = ? and receiver_id = ?) or (sender_id = ? and receiver_id = ?) order by created_at";
   con.query(sqlQueryGetAllMessages, [req.session._id, receiver_id, receiver_id, req.session._id], function(err, allMessages) {
     console.log(allMessages);
     console.log("Inside chat id function");
     // res.render('chat', {allMessages: allMessages});
-    res.render('chat');
+    res.render('chat', {allMessages: allMessages});
   });
 });
 
@@ -193,5 +192,4 @@ app.post('/signup', function(req, res) {
       }
     }
   })
-
 });

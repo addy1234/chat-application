@@ -1,0 +1,7 @@
+1) JS does asynchronous calls, so later statements got executed first and thus gives false result.
+
+
+2) browser makes html files for dynamic routing.
+   browser creates a directory structure according to routing.
+   e.g: route/a/b will create a directory structure of /a/b.
+   So, we have to change of main.js in script tag to /main.js.
