@@ -5,3 +5,4 @@
    browser creates a directory structure according to routing.
    e.g: route/a/b will create a directory structure of /a/b.
    So, we have to change of main.js in script tag to /main.js.
+   https://stackoverflow.com/questions/29718481/unexpected-token-error-in-react-router-component

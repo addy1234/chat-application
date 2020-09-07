@@ -1,14 +1,56 @@
 1) index.js will automatically pick index.html file, if present in public directory, and is placed above the '/' route.
 
-    <div>
-        <% allMessages.forEach(function(message) { %>
-            <li><%= message.sender_id %>, <%= message.receiver_id %> , <%= message.mssg %> , <%= message.created_at %></li>
-        <% }); %>
+2) Take backup of all messages and media, and store them in user's device itself.
+
+<% include ./partials/header %>
+
+<body>
+    <form action="/login" method='POST'>
+        <input type="email" name="email" placeholder="Enter your email">
+        <input type="password" name="password" placeholder="Enter your password">
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
+
+<% include ./partials/footer %>
+
+
+index.ejs:
+
+
+      <div>
+        <input type="text" id="mssg">
+        <button onclick="send()">Submit</button>
+      </div>
+
+      <div>
+        <p id="mssg-got">Got new message!!</p>
+      </div>
+
+      <div>
+        <p>Logged in User</p>
+        <%= userId %>
+      </div>
+
+      <div>
+        <a href="/login">Login</a>
+      </div>
+
+      <div>
+        <a href="/logout">Logout</a>
+      </div>
+
+      <div>
+        <a href="/signup">Signup</a>
+      </div>
+
+      <div>
+        <a href="/chat">Chat here</a>
+      </div>
+
+      <div>
+        <a href="/users">All users</a>
+      </div>
+
     </div>
-
-        <p id="currentUser">
-        <%= currentUser %>
-    </p>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
-    <script src="./main.js"></script>

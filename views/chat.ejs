@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<% include ./partials/header %>
 
-
-</head>
-<body>
     <p id="currentUser">
         <%= currentUser %>
     </p>
@@ -18,6 +13,15 @@
         <button onclick="send()">Submit</button>
     </div>
 
+    
+    <div>
+        <% users.forEach(function(user) { %>
+            <li>
+                <a href="/chat/<%= user.id %>"><%= user.email %></a>
+            </li>
+        <% }); %>
+    </div>
+
     <div>
         <% allMessages.forEach(function(message) { %>
             <li><%= message.sender_id %>, <%= message.receiver_id %> , <%= message.mssg %> , <%= message.created_at %></li>
@@ -29,7 +33,5 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script src="../main.js"></script>
-</body>
 
-
-</html>
+<% include ./partials/footer %>
