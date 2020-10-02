@@ -100,6 +100,11 @@ app.get('/login', function(req, res) {
 });
 
 app.get('/chat', function(req, res) {
+  // username
+  var userId = req.session._id;
+
+  // all friends.
+  
   res.render('chat');
 });;
 
@@ -147,10 +152,11 @@ app.post('/login', function(req, res) {
           res.redirect('/signup');
         } else {
           // Successful logged in.
-          sqlQueryGetId = `select id from users where email='${userEmail}'`;
+          sqlQueryGetId = `select * from users where email='${userEmail}'`;
           con.query(sqlQueryGetId, function(err, data) {
-            // console.log(data);
+            console.log(data);
             req.session._id = data[0].id;
+            //req.session.userEmail = data[0]
             res.redirect('/chat');
           });
           // It will get executed first because of asynchronous behaviour of JS.
