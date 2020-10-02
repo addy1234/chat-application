@@ -101,23 +101,39 @@ app.get('/login', function(req, res) {
 
 app.get('/chat', function(req, res) {
   // username
-  var userId = req.session._id;
-
   // all friends.
-  
-  res.render('chat');
+  var getAllChatUsers = 'select id,email from users where id in (select distinct(case  when sender_id = ? then receiver_id when receiver_id = ? then sender_id end) as ids from message)';
+  // console.log(getAllChatUsers);
+  con.query(getAllChatUsers, [req.session._id, req.session._id], function(err, allUsers) {
+    console.log(allUsers);
+    res.render('chat', {userEmail: req.session.userEmail, allUsers: allUsers});
+  });
 });;
 
 app.get('/chat/:id', function(req, res) {
   // Get all the chats related to the current user.
   var receiver_id = req.params.id;
   // console.log(receiver_id);
-  sqlQueryGetAllMessages = "select * from message where (sender_id = ? and receiver_id = ?) or (sender_id = ? and receiver_id = ?) order by created_at";
-  con.query(sqlQueryGetAllMessages, [req.session._id, receiver_id, receiver_id, req.session._id], function(err, allMessages) {
-    console.log(allMessages);
-    console.log("Inside chat id function");
-    // res.render('chat', {allMessages: allMessages});
-    res.render('chat', {allMessages: allMessages, receiver_id: receiver_id});
+  con.query('select id,email from users where id = ?', [req.session._id], function(err, sender) {
+      if(err) {
+        console.log(err);
+      } else{
+        con.query('select id,email from users where id = ?', [receiver_id], function(err, receiver) {
+          if(err){
+            console.log(err);
+          } else{
+            // console.log(sender);
+            // console.log(receiver);
+            sqlQueryGetAllMessages = "select * from message where (sender_id = ? and receiver_id = ?) or (sender_id = ? and receiver_id = ?) order by created_at";
+            con.query(sqlQueryGetAllMessages, [req.session._id, receiver_id, receiver_id, req.session._id], function(err, allMessages) {
+              console.log(allMessages);
+              console.log("Inside chat id function");
+              // res.render('chat', {allMessages: allMessages});
+              res.render('userChat', {allMessages: allMessages, sender: sender[0], receiver: receiver[0]});
+            });          
+          }
+        });
+      }
   });
 });
 
@@ -156,7 +172,7 @@ app.post('/login', function(req, res) {
           con.query(sqlQueryGetId, function(err, data) {
             console.log(data);
             req.session._id = data[0].id;
-            //req.session.userEmail = data[0]
+            req.session.userEmail = data[0].email;
             res.redirect('/chat');
           });
           // It will get executed first because of asynchronous behaviour of JS.
