@@ -99,6 +99,10 @@ app.get('/login', function(req, res) {
   res.render('login');
 });
 
+app.get('/chat', function(req, res) {
+  res.render('chat');
+});;
+
 app.get('/chat/:id', function(req, res) {
   // Get all the chats related to the current user.
   var receiver_id = req.params.id;
@@ -147,7 +151,7 @@ app.post('/login', function(req, res) {
           con.query(sqlQueryGetId, function(err, data) {
             // console.log(data);
             req.session._id = data[0].id;
-            res.redirect('/');
+            res.redirect('/chat');
           });
           // It will get executed first because of asynchronous behaviour of JS.
           console.log("In here: " + req.session._id);
