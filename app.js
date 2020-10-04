@@ -81,9 +81,13 @@ io.on("connection", function (socket) {
       // delete from message.
       con.query(sqlQueryMessage, 
                 [messageData.sender, messageData.receiver, messageData.mssg], function(err, result) {
-                  console.log("Entry added");
+                sqlQueryGetRecentMessage = 'select sender_id, receiver_id, mssg, date_format(created_at, "%M %d %Y %T") as created_at from message where id = ?';
+                con.query(sqlQueryGetRecentMessage, [result.insertId], function(err, result) {
+                  console.log(result);
+                  io.emit("messageResponse", result[0]);
                 });
-      io.emit("messageResponse", messageData);
+            });
+      // io.emit("messageResponse", messageData);
     });
 });
 
@@ -124,7 +128,7 @@ app.get('/chat/:id', function(req, res) {
           } else{
             // console.log(sender);
             // console.log(receiver);
-            sqlQueryGetAllMessages = "select * from message where (sender_id = ? and receiver_id = ?) or (sender_id = ? and receiver_id = ?) order by created_at";
+            sqlQueryGetAllMessages = "select sender_id, receiver_id, mssg, date_format(created_at, '%M %d %Y %T') as created_at  from message where (sender_id = ? and receiver_id = ?) or (sender_id = ? and receiver_id = ?) order by created_at";
             con.query(sqlQueryGetAllMessages, [req.session._id, receiver_id, receiver_id, req.session._id], function(err, allMessages) {
               console.log(allMessages);
               console.log("Inside chat id function");

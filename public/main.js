@@ -3,19 +3,21 @@ var messageToSend = document.getElementById('mssg');
 var chatDisplay  = document.getElementById('chat-display');
 
 function send() {
-    console.log("Inside");
-    console.log(messageToSend.value);
     socket.emit("message", {mssg: messageToSend.value, receiver: receiverId, sender: senderId});
-    // Add message html to chat.ejs.
-    // message = `<li>${userId.innerText} to ${mssgReceiver.value}: ${messageToSend.value}</li>`
-    // chatDisplay.innerHTML += message;
     messageToSend.value = "";
 }
-
+ 
 socket.on("messageResponse", function(messageData){
 
-    if (messageData.receiver == senderId || messageData.sender == senderId) {
-        message = `<li>${messageData.sender} to ${messageData.receiver}: ${messageData.mssg}</li>`
+    if (messageData.receiver_id == senderId || messageData.sender_id == senderId) {
+        // console.log(currentUser);
+        if(messageData.sender_id == currentUser){
+            // right
+            message = `<li class="right-alignment">${messageData.sender_id} to ${messageData.receiver_id}: ${messageData.mssg} : ${messageData.created_at}</li>`
+        }else{
+            // left
+            message = `<li>${messageData.sender_id} to ${messageData.receiver_id}: ${messageData.mssg} : ${messageData.created_at}</li>`
+        }
         chatDisplay.innerHTML += message;
     }
 });
