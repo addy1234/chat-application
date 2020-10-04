@@ -13,10 +13,10 @@ socket.on("messageResponse", function(messageData){
         // console.log(currentUser);
         if(messageData.sender_id == currentUser){
             // right
-            message = `<li class="right-alignment">${messageData.sender_id} to ${messageData.receiver_id}: ${messageData.mssg} : ${messageData.created_at}</li>`
+            message = `<div class="sender-msg"> <li>${messageData.mssg} : ${messageData.created_at}</li> </div>`
         }else{
             // left
-            message = `<li>${messageData.sender_id} to ${messageData.receiver_id}: ${messageData.mssg} : ${messageData.created_at}</li>`
+            message = `<div class="receiver-msg"> <li>${messageData.mssg} : ${messageData.created_at}</li> </div>`
         }
         chatDisplay.innerHTML += message;
     }

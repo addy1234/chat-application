@@ -1,28 +1,50 @@
-<%- include('./partials/header') %>
+<%- include('partials/header') %>
 
-    <p>
+    <!-- <p>
         <%= sender.email %>
     </p>
 
     <p>
         <%= receiver.email %>
-    </p>
+    </p> -->
 
-    <div id="chat-display">
-        <% allMessages.forEach(function(message) { %>
-            <% if (message.sender_id == currentUser){ %>
-                <li style="margin-left: 75%"><%= message.sender_id %>, <%= message.receiver_id %> , <%= message.mssg %> , <%= message.created_at %></li>
-            <% }else { %>
-                <li><%= message.sender_id %>, <%= message.receiver_id %> , <%= message.mssg %> , <%= message.created_at %></li>
-            <% } %>
-        <% }); %>
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">
+          <img width="30" height="30" class="d-inline-block align-top" alt="">
+          <%= sender.email %>
+        </a>
+    </nav>
+
+    <div class="row chat-container">
+        <div class="col-md-4 left-panel">
+            <p>Left Panel</p>
+        </div>
+        <div class="col-md-8 right-panel">
+            <div id="chat-display">
+                <% allMessages.forEach(function(message) { %>
+                    <% if (message.sender_id == currentUser){ %>
+                        <div class="sender-msg">
+                            <li><%= message.mssg %></li>
+                            <div class="timestamp">
+                                <li class="timestamp"><%= message.created_at %></li>
+                            </div>
+                        </div>
+                    <% }else { %>
+                        <div class="receiver-msg">
+                            <li><%= message.mssg %></li>
+                            <div class="timestamp">
+                                <li class="timestamp"><%= message.created_at %></li>
+                            </div>
+                        </div>
+                    <% } %>
+                <% }); %>
+            </div>
+            <div>
+                <input type="text" id="mssg">
+                <button onclick="send()">Submit</button>
+            </div>
+        </div>
     </div>
-
-    <div>
-        <input type="text" id="mssg">
-        <button onclick="send()">Submit</button>
-    </div>
-
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script type='text/javascript'> 
@@ -32,4 +54,4 @@
     </script>
     <script src="../main.js"></script>
 
-<%- include('./partials/footer') %>
+<%- include('partials/footer') %>
