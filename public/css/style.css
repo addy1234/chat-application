@@ -97,25 +97,19 @@ margin-left: 4px;
     margin-top: 10px;
     border-radius: 5px;
     padding: 3px;
-    margin-left: 60%;
+    margin-left: 80%;
     color: green;
-}
-
-.sender-msg li{
-    list-style-type: none;
+    background: #E2FFC7;
+    width: 20%;
 }
 
 .receiver-msg {
     border: 2px solid blue;
     margin-top: 10px;
-    width: 30%;
+    width: 20%;
     border-radius: 5px;
     padding: 3px;
     color: blue;
-}
-
-.receiver-msg li{
-    list-style-type: none;
 }
 
 .left-panel{
@@ -124,7 +118,8 @@ border: 5px solid red;
 
 .right-panel{
 border: 5px solid blue;
-padding: 15px;
+padding: 0px;
+margin-left: 0px;
 }
 
 #chat-display{
@@ -139,4 +134,33 @@ height: 100px;
 .timestamp{
 margin-left: 30%;
 width: 70%;
+}
+
+.chat-header{
+    background: #036055;
+    color: white;
+    margin: 0px;
+    padding: 20px;
+}
+
+.check{
+    overflow: hidden;
+}
+.check span {
+	color: #888;
+	font-size: 12px;
+    font-weight: 700px;
+    float: right;
+}
+
+.submit{
+    border: palegoldenrod solid 5px;
+    padding: 20px;
+    background-color: khaki;
+}
+
+.submit input{
+    width: 90%;
+    height: 20%;
+    padding: 2%;
 }

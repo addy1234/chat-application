@@ -17,29 +17,53 @@
 
     <div class="row chat-container">
         <div class="col-md-4 left-panel">
-            <p>Left Panel</p>
+            <div class="all-users">
+                <% allUsers.forEach(function(userId) { %>
+                    <li>
+                        <a href="/chat/<%= userId.id %>"><%= userId.email %></a>
+                    </li>
+                <% }); %>
+            </div>
         </div>
         <div class="col-md-8 right-panel">
+            <div class="chat-header">
+				<div class="profile">
+					<div class="left">
+						<!-- <img src="img/arrow.png" class="arrow"> -->
+						<!-- <img src="img/pp.png" class="pp"> -->
+						<h2><%= receiver.email %></h2>
+						<!-- <span>online</span> -->
+					</div>
+					<div class="right">
+						<!-- <img src="img/video.png" class="icon">
+						<img src="img/phone.png" class="icon">
+						<img src="img/more.png" class="icon"> -->
+					</div>
+				</div>
+			</div>
             <div id="chat-display">
                 <% allMessages.forEach(function(message) { %>
                     <% if (message.sender_id == currentUser){ %>
+                        
                         <div class="sender-msg">
-                            <li><%= message.mssg %></li>
-                            <div class="timestamp">
-                                <li class="timestamp"><%= message.created_at %></li>
+                            <p><%= message.mssg %></p>
+                            <div class="check">
+                                <span><%= message.created_at.split(" ")[3] %></span>
+                                <!-- <img src="img/check-2.png"> -->
                             </div>
                         </div>
                     <% }else { %>
                         <div class="receiver-msg">
-                            <li><%= message.mssg %></li>
-                            <div class="timestamp">
-                                <li class="timestamp"><%= message.created_at %></li>
+                            <p><%= message.mssg %></p>
+                            <div class="check">
+                                <span><%= message.created_at.split(" ")[3] %></span>
+                                <!-- <img src="img/check-2.png"> -->
                             </div>
                         </div>
                     <% } %>
                 <% }); %>
             </div>
-            <div>
+            <div class="submit">
                 <input type="text" id="mssg">
                 <button onclick="send()">Submit</button>
             </div>

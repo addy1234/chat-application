@@ -132,8 +132,12 @@ app.get('/chat/:id', function(req, res) {
             con.query(sqlQueryGetAllMessages, [req.session._id, receiver_id, receiver_id, req.session._id], function(err, allMessages) {
               console.log(allMessages);
               console.log("Inside chat id function");
-              // res.render('chat', {allMessages: allMessages});
-              res.render('userChat', {allMessages: allMessages, sender: sender[0], receiver: receiver[0]});
+
+                var getAllChatUsers = 'select id,email from users where id in (select distinct(case  when sender_id = ? then receiver_id when receiver_id = ? then sender_id end) as ids from message)';
+                // console.log(getAllChatUsers);
+                con.query(getAllChatUsers, [req.session._id, req.session._id], function(err, allUsers) {
+                  console.log(allUsers);
+                  res.render('userChat', {allMessages: allMessages, sender: sender[0], receiver: receiver[0], allUsers: allUsers});                });
             });          
           }
         });
@@ -177,7 +181,7 @@ app.post('/login', function(req, res) {
             console.log(data);
             req.session._id = data[0].id;
             req.session.userEmail = data[0].email;
-            res.redirect('/chat');
+            res.redirect('/chat/' + req.session._id);
           });
           // It will get executed first because of asynchronous behaviour of JS.
           console.log("In here: " + req.session._id);
