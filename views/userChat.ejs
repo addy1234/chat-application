@@ -20,7 +20,7 @@
             <div class="all-users">
                 <% allUsers.forEach(function(userId) { %>
                     <li>
-                        <a href="/chat/<%= userId.id %>"><%= userId.email %></a>
+                        <a onclick="loadData(<%= userId.id %>)" href="#"><%= userId.email %></a>
                     </li>
                 <% }); %>
             </div>

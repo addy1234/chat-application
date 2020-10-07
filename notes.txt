@@ -3,3 +3,15 @@
 2) Take backup of all messages and media, and store them in user's device itself.
 
 3) Add middlewares.
+
+4) Add multi column indexing.
+
+5) Add online feature.
+
+6) show typing feature.
+
+7) send photos, videos etc.
+
+8) add AJAX
+
+9) CI/CD 

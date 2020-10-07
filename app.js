@@ -104,14 +104,15 @@ app.get('/login', function(req, res) {
 });
 
 app.get('/chat', function(req, res) {
-  // username
-  // all friends.
-  var getAllChatUsers = 'select id,email from users where id in (select distinct(case  when sender_id = ? then receiver_id when receiver_id = ? then sender_id end) as ids from message)';
-  // console.log(getAllChatUsers);
-  con.query(getAllChatUsers, [req.session._id, req.session._id], function(err, allUsers) {
-    console.log(allUsers);
-    res.render('chat', {userEmail: req.session.userEmail, allUsers: allUsers});
-  });
+  res.render('userChat');
+  // // username
+  // // all friends.
+  // var getAllChatUsers = 'select id,email from users where id in (select distinct(case  when sender_id = ? then receiver_id when receiver_id = ? then sender_id end) as ids from message)';
+  // // console.log(getAllChatUsers);
+  // con.query(getAllChatUsers, [req.session._id, req.session._id], function(err, allUsers) {
+  //   console.log(allUsers);
+  //   res.render('userChat');
+  // });
 });;
 
 app.get('/chat/:id', function(req, res) {
@@ -137,7 +138,12 @@ app.get('/chat/:id', function(req, res) {
                 // console.log(getAllChatUsers);
                 con.query(getAllChatUsers, [req.session._id, req.session._id], function(err, allUsers) {
                   console.log(allUsers);
-                  res.render('userChat', {allMessages: allMessages, sender: sender[0], receiver: receiver[0], allUsers: allUsers});                });
+                  if(receiver_id == req.session._id){
+                    res.render('userChat', {allMessages: allMessages, sender: sender[0], receiver: receiver[0], allUsers: allUsers});
+                  }else{
+                    res.send({allMessages: allMessages, sender: sender[0], receiver: receiver[0], allUsers: allUsers});
+                  }
+                });
             });          
           }
         });
@@ -182,6 +188,7 @@ app.post('/login', function(req, res) {
             req.session._id = data[0].id;
             req.session.userEmail = data[0].email;
             res.redirect('/chat/' + req.session._id);
+            //res.redirect('/chat');
           });
           // It will get executed first because of asynchronous behaviour of JS.
           console.log("In here: " + req.session._id);
